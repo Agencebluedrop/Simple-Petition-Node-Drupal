@@ -5,28 +5,65 @@ SPN helps the user promote its petition by letting him create the petition, mana
 
 An easy to use module to manage petitions on Drupal.
 
+
 # Installation & Functionalities
 SPN can be enabled like any other extension in Drupal back office: /admin/modules
 Upon installation, the module creates a content type “Petition” with predefined fields (Title, Body, Validation and Confirmation Emails fields and their corresponding subjects fields) and adds two blocks, Petition signing form and Petition results block, that can be managed in Drupal’s back office.
+
+### Petition Content Type
+![petition content type](screenshots/ct_petition.png)
+
 A configuration page is available at /admin/config/spn/notifications to manage the default emails and notifications messages for all the petitions. Tokens are available to use variables related to the petition.
+
+### SPN Configuration Page:
+![config page - part 1](screenshots/petition_config_1.png)
+![config page - part 2](screenshots/petition_config_2.png)
+
 Additionally, SPN adds two tables to the Drupal’s schema, “Petition Signatures” and “Petition Users”. The first will contain data about each signature made on any petition and the latter will contain the info of the anonymous users that are signing the petitions... 
+
 
 # Utilization
 The “creating a petition” process is the same as adding any Drupal content. By simply going to /node/add and choosing the petition content type then filling the fields and saving the content.
 Note that, if the emails fields for a content are left empty, the module will use the default emails defined in the configuration page of the module (/admin/config/spn/notifications).
 
+### Step 1: Add new content
+![add content](screenshots/add_content.png)
+
+### Step 2: Choose "Petition" as the content type and fill the fields
+![petion content creation page - part 1](screenshots/add_petition_example_1.png)
+![petion content creation page - part 2](screenshots/petition_add_2.png)
+
+### Step 3: Register the content
+![created petition](screenshots/petition_content.png)
+
 After creating the content, the user has to add the two blocks to the pages he desires. By directing to  /admin/structure/block and adding the bocks to the preferred region in the page. A template suggestions will be available to change the blocks layout and take control of the structure and design of each block.
+
+### Adding the blocks
+![block layout](screenshots/petition_block_layout.png)
+
 The blocks controllers function following the route of the page they are on, so adding the blocks once in Drupal’s block configuration page will be enough, the blocks will show on all the petitions node pages
 
+
 # Signing a petition
-To sign a petition, users can be logged in or anonymous, they are invited to fill in the required infos and add a comment if desired. Moreover, they can choose to sign anonymously, if the corresponding field is checked, their infos and comment won’t appear in the results block but their vote will be counted. After signing, the subscriber will receive an email notification with a link to validate its signature, if not validated, the vote won’t be counted. And after validation, he will receive a confirmation email.
+To sign a petition, users can be logged in or anonymous, they are invited to fill in the required infos and add a comment if desired. Moreover, they can choose to sign anonymously, if the corresponding field is checked, their infos and comment won’t appear in the results block but their vote will be counted.
+
+### Signing a petition
+![signing a petition](screenshots/petition_sign_example.png)
+
+After signing, the subscriber will receive an email notification with a link to validate its signature, if not validated, the vote won’t be counted. And after validation, he will receive a confirmation email.
+
+### Validating the petition
+![after clicking on validation link](screenshots/petition_validation_link_clicked.png)
+
 
 # Exporting Signatures to CSV file
 Administrators can export the signatures by going to the configuration page at  /admin/spn/content/petitions
 Make sure the "private" directory is well configured on your server. You can check it from the back office at /admin/config/media/file-system bye making sure the "Private file system path" is well assigned.
 
+
 # Extensions
 Some extensions are being developed for future releases, administer petitions pages, administer petition fields, export pdf, routes and permissions...
+
 
 # Credits
 Simple Petition Node is developed and maintained by <a href="https://bluedrop.fr">bluedrop.fr</a>.
