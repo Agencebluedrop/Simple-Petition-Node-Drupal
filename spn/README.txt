@@ -4,15 +4,6 @@ Simple Petition Node module for Drupal
 The simple petition node module offers to create a petition as a node with automatically generated form block and results block.
 
 
-DEPENDENCIES
-------------
-
-* depends on the CAPTCHA and reCaptcha modules.
-  https://drupal.org/project/captcha
-  https://drupal.org/project/recaptcha
-
-
-
 CONFIGURATION
 -------------
 
