@@ -30,4 +30,5 @@ Some extensions are being developed for future releases, administer petitions pa
 
 # Credits
 Simple Petition Node is developed and maintained by <a href="https://bluedrop.fr">bluedrop.fr</a>.
+
 <a href="https://www.cgt.fr/" title="CGT">Authorized by Confédération Générale du Travail - CGT.</a>
