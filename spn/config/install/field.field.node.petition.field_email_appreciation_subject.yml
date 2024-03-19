@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_email_appreciation_subject
+    - node.type.petition
+  module:
+    - text
+  enforced:
+    module:
+      - spn
+id: node.petition.field_email_appreciation_subject
+field_name: field_email_appreciation_subject
+entity_type: node
+bundle: petition
+label: 'Email appreciation Subject'
+description: 'Subject of the email to send to user to confirm that he validated his signature. Use {_Node-Title_} to get the title and {_Node-URL_} to get the link to the petition page.'
+required: false
+translatable: false
+default_value: 'Petition signature confirmed'
+default_value_callback: ''
+settings:
+  display_summary: false
+field_type: string

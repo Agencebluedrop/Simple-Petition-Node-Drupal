@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+    config:
+        - field.field.node.petition.body
+        - node.type.petition
+    module:
+        - text
+        - user
+    enforced:
+        module:
+            - spn
+id: node.petition.default
+targetEntityType: node
+bundle: petition
+mode: default
+content:
+    body:
+        label: hidden
+        type: text_default
+        weight: 101
+        settings: {  }
+        third_party_settings: {  }
+    links:
+        weight: 100
+hidden: {  }

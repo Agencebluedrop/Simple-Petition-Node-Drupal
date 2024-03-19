@@ -1,0 +1,173 @@
+<?php
+
+/**
+* Implements hook_schema().
+*
+* Defines the database tables used by this module.
+*
+* @see hook_schema()
+*
+* @ingroup spn
+*/
+function spn_schema() {
+
+  $schema['petition_signatures'] = [
+    'description' => 'Stores signatures made on a node petition.',
+    'fields' => [
+      'sid' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique signature ID.',
+      ],
+      'nid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "petition node id {node}.id of the petition.",
+      ],
+      'uid' => [
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => "Creator user's id, Foreign Key to {petition_user}.puid",
+      ],
+      'drupal_uid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Creator user's {users}.uid, Foreign Key to Drupal users table {users}.uid",
+      ],
+      'is_drupal_user' => [
+        'type' => 'int',
+        'length' => 3,
+        'not null' => TRUE,
+        'default' => 0,
+        'unsigned' => TRUE,
+        'description' => "Boolean to indicate if the one who signed is a Drupal registered user",
+      ],
+      'anonymous_opinion' => [
+        'type' => 'int',
+        'length' => 3,
+        'not null' => TRUE,
+        'default' => 0,
+        'unsigned' => TRUE,
+        'description' => "Boolean to indicate if the user wants to stay anonymous.",
+      ],
+      'validated' => [
+        'type' => 'int',
+        'length' => 3,
+        'not null' => TRUE,
+        'default' => 0,
+        'unsigned' => TRUE,
+        'description' => "Boolean to indicate if the signature has been validated.",
+      ],
+      'comment' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => 'Comment made by the user on while signing the petition.',
+      ],
+      'token' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Token to validate signature.',
+      ],
+      'timestamp' => [
+        'description' => 'The time signature was set or changed.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['sid'],
+    'foreign keys' => [
+      'fk_node_id' => [
+        'table' => 'node',
+        'columns' => ['nid'=>'nid'],
+      ],
+      'fk_petition_user' => [
+        'table' => 'petition_user',
+        'columns' => [
+          'uid' => 'user_id',
+        ],
+      ],
+      'fk_drupal_user' => [
+        'table' => 'users',
+        'columns' => [
+          'drupal_uid' => 'uid',
+        ],
+      ],
+    ],
+  ];
+
+  $schema['petition_user'] = [
+    'description' => 'Stores users data for users not registered in Drupal (anonymous signatures).',
+    'fields' =>
+      [
+        'user_id' => [
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'Primary Key: Unique signature ID.',
+        ],
+        'name' => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'Name of the person.',
+        ],
+        'surname' => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'Surname of the person.',
+        ],
+        'email' => [
+          'type' => 'varchar',
+          'not null' => TRUE,
+          'length' => 191,
+          'description' => 'The email of the person.',
+        ],
+        'postal_code' => [
+          'type' => 'varchar',
+          'not null' => FALSE,
+          'length' => 255,
+          'description' => 'The postal code of the user.',
+        ],
+      ],
+      'primary key' => ['user_id'],
+      'unique keys' => [
+        'email' => ['email'],
+      ],
+    ];
+  return $schema;
+}
+
+function spn_uninstall(){
+  // Load services.
+  $queryFactory = \Drupal::entityQuery('node');
+  $nodeStorage  = \Drupal::service('entity_type.manager')->getStorage('node');
+
+  // Query all entity.
+  $query = $queryFactory->condition('type', 'petition')->accessCheck(false);
+  $nids = $query->execute();
+
+  // Delete entities.
+  if (!empty($nids)) {
+    $entities = $nodeStorage->loadMultiple($nids);
+    $nodeStorage->delete($entities);
+  }
+
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('petition_signatures')) {
+    $schema->dropTable('petition_signatures');
+  }
+  if ($schema->tableExists('petition_user')) {
+    $schema->dropTable('petition_user');
+  }
+}

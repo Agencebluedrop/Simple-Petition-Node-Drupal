@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_email_validation_subject
+    - node.type.petition
+  module:
+    - text
+  enforced:
+    module:
+      - spn
+id: node.petition.field_email_validation_subject
+field_name: field_email_validation_subject
+entity_type: node
+bundle: petition
+label: 'Email validation Subject'
+description: 'Subject of the email to send the subscriber to validate his signature. Use {_Node-Title_} to get the title of the petition page and {_Validate-Link_} for the validation link.'
+required: false
+translatable: false
+default_value: 'Petition signautre validation'
+default_value_callback: ''
+settings:
+  display_summary: false
+field_type: string

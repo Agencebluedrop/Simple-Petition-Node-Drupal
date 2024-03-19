@@ -1,0 +1,58 @@
+{#
+/**
+ * @file
+ * Default block implementation to Petition Form Block.
+ *
+ * Available variables:
+ * - form: form of the petition
+ *
+ * @ingroup themeable
+ */
+#}
+{# Remove whitespace between tags for even spacing. #}
+{% apply spaceless %}
+
+  {# Name of the user #}
+  <div class="field-sep">
+    {{ form.name }}
+  </div>
+
+  {# Last name of the user #}
+  <div class="field-sep">
+  {{ form.surname }}
+  </div>
+
+  {# E-mail of the user #}
+  <div class="field-sep">
+  {{ form.email }}
+  </div>
+
+  {# Postal Code of the user #}
+  <div class="field-sep">
+  {{ form.postal_code }}
+  </div>
+
+  {# Comment of the user #}
+  <div class="field-sep">
+  {{ form.comment }}
+  </div>
+
+  {# Checkbox for the case where the user wishes to be anonymous #}
+  <div class="field-sep">
+  {{ form.anonymous_sign }}
+  </div>
+
+  {# Captcha check #}
+  <div class="field-sep">
+  {{ form.captcha }}
+  </div>
+
+  {# Submit button #}
+  <div class="field-sep">
+  {{ form.actions }}
+  </div>
+
+  {# Render all remaining elements #}
+  {{ form|without('name', 'surname', 'email', 'postal_code', 'comment', 'anonymous_sign', 'captcha', 'actions') }}
+
+{% endapply %}

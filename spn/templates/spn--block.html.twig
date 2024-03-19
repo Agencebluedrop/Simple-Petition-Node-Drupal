@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Default block implementation to Petition Form Block.
+ *
+ * Available variables:
+ * - machine_name: machine name of the block
+ * - form: form of the petition
+ *
+ * @ingroup themeable
+ */
+#}
+{# Remove whitespace between tags for even spacing. #}
+{% apply spaceless %}
+  
+  {# Display the form #}
+  <div class="block-sep">
+    {{ form }}
+  </div>
+
+{% endapply %}

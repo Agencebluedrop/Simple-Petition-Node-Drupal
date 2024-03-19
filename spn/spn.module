@@ -1,0 +1,170 @@
+<?php
+
+/**
+ * An easy to use module to manage petitions on Drupal.
+ *
+ * PHP version 7
+ *
+ * LICENSE: This source file is subject to version 3.01 of the PHP license
+ * that is available through the world-wide-web at the following URI:
+ * http://www.php.net/license/3_01.txt.  If you did not receive a copy of
+ * the PHP License and are unable to obtain it through the web, please
+ * send a note to license@php.net so we can mail you a copy immediately.
+ *
+ * @category  Content
+ * @package   Content
+ * @author    Elie Choufani <elie@ebizproduction.com>
+ * @author    Bluedrop <info@bluedrop.fr>
+ * @copyright 2018-2019 Bluedrop
+ * @link      https://www.drupal.org/project/spn
+ */
+
+use Drupal\Core\Mail;
+
+/**
+ *
+ * Implements hook_mail().
+ *
+ * @param string $key An identifier of the mail.
+ * @param string $message An array to be filled in.
+ * @param array $params An array of parameters supplied by the caller of MailManagerInterface->mail().
+ *
+ */
+function spn_mail($key, &$message, $params) {
+
+    $options =[
+    'langcode' => $message['langcode'],
+    ];
+
+    $entity_title = isset($params['entity_title']) ? $params['entity_title']: '';
+    $entity_url = isset($params['entity_url']) ? $params['entity_url']: '';
+    $node_url = isset($params['node_url']) ? $params['node_url']: '';
+
+
+    $replacements = [
+    '{_Validate-Link_}' => $entity_url,
+    '{_Node-Title_}' => $entity_title,
+    '{_Node-URL_}' => $node_url,
+    ];
+
+    if(isset($params['email_content'][0]['value']) && $params['email_content'][0]['value'] != '' && !empty($params['email_content'][0]['value']))
+      $message['body'][] = _spn_format_email_message($params['email_content'][0]['value'], $replacements);
+    else
+      $message['body'][] = _spn_format_email_message(_spn_get_email_message($key), $replacements);
+
+    if(isset($params['email_subject'][0]['value']) && $params['email_subject'][0]['value'] != '' && !empty($params['email_subject'][0]['value']))
+      $message['subject'] = _spn_format_email_message($params['email_subject'][0]['value'], $replacements);
+    else
+      $message['subject'] = _spn_format_email_message(_spn_get_email_subject($key), $replacements);
+
+}
+
+/**
+ *
+ * Custom function to get the email body depending on the mail key from Drupal config,
+ * and replace the tokens by their corresponding variable.
+ *
+ * @param string $key An identifier of the mail.
+ * @param array $replacements An array of tokens and their corresponding values.
+ *
+ */
+function _spn_get_email_message($key) {
+    $email_configs = unserialize((string) \Drupal::config('spn.settings')->get($key));
+    $email_body = $email_configs['body']['value'];
+    return $email_body;
+}
+
+function _spn_format_email_message($message, $replacements){
+  foreach ($replacements as $k=>$v){
+      $message = str_replace($k, $v, $message ?? '' );
+  }
+
+  return $message;
+}
+/**
+ *
+ * Custom function to get the email subject depending on the mail key from Drupal config,
+ * and replace the tokens by their corresponding variable.
+ *
+ * @param string $key An identifier of the mail.
+ * @param array $replacements An array of tokens and their corresponding values.
+ *
+ */
+function _spn_get_email_subject($key) {
+
+    $email_configs = unserialize((string) \Drupal::config('spn.settings')->get($key));
+    return $email_configs['subject'];
+
+}
+
+/**
+ * Implements hook_theme().
+ */
+function spn_theme($existing, $type, $theme, $path) {
+  return [
+    'spn__form' => [
+      'render element' => 'form'
+    ],
+    'spn__block' => [
+      'variables' => [
+        'form' => null,
+        'machine_name' => null,
+      ],
+      'render element' => 'elements'
+    ],
+    'spn_result__block' => [
+      'variables' => [
+        'signatures' => null,
+        'signature_count' => null,
+        'machine_name' => null,
+      ],
+      'render element' => 'elements'
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK() for SPN Form.
+ */
+function spn_theme_suggestions_spn__form(array $variables) {
+  return _spn_create_suggestions('spn__form', $variables);
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK() for SPN Block.
+ */
+function spn_theme_suggestions_spn__block(array $variables) {
+  return _spn_create_suggestions('spn__block', $variables);
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK() for SPN Result Block.
+ */
+function spn_theme_suggestions_spn_result__block(array $variables) {
+  return _spn_create_suggestions('spn_result__block', $variables);
+}
+
+/*
+ * Create the twig suggestions based on the base name of the theme
+ */
+function _spn_create_suggestions($suggestion, $variables) {
+
+  // default suggestion
+  $suggestions = [];
+  $suggestions[] = $suggestion;
+
+  // machine name related suggestion
+  $suggestion .= '__';
+  // $suggestions[] = $suggestion . $variables['machine_name'];
+
+
+
+  // if route name is of type entity.*.canonical
+  preg_match('/entity.(.*).canonical/', \Drupal::routeMatch()->getRouteName(), $entity_bundle);
+  if (!empty($entity_bundle)) {
+    $suggestions[] = $suggestion . $entity_bundle[1] .'__' . \Drupal::routeMatch()->getParameter($entity_bundle[1])->Id();
+  }
+
+  return $suggestions;
+
+}

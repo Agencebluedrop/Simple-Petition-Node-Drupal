@@ -1,0 +1,58 @@
+langcode: en
+status: true
+dependencies:
+    config:
+        - field.field.node.petition.body
+        - field.field.node.petition.field_email_validation
+        - field.field.node.petition.field_email_appreciation
+        - field.field.node.petition.field_email_appreciation_subject
+        - field.field.node.petition.field_email_validation_subject
+        - node.type.petition
+    module:
+        - text
+        - user
+    enforced:
+        module:
+          - spn
+id: node.petition.default
+targetEntityType: node
+bundle: petition
+mode: default
+content:
+    body:
+        label: hidden
+        type: text_textarea_with_summary
+        weight: 3
+        settings: {  }
+        third_party_settings: {  }
+    field_email_validation:
+        weight: 7
+        settings:
+          rows: 9
+          summary_rows: 3
+          placeholder: ''
+        third_party_settings: {  }
+        type: text_textarea_with_summary
+    field_email_appreciation:
+        weight: 7
+        settings:
+          rows: 9
+          summary_rows: 3
+          placeholder: ''
+        third_party_settings: {  }
+        type: text_textarea_with_summary
+    field_email_validation_subject:
+        weight: 8
+        settings:
+          size: 60
+          placeholder: ''
+        third_party_settings: {  }
+        type: string_textfield
+    field_email_appreciation_subject:
+        weight: 8
+        settings:
+          size: 60
+          placeholder: ''
+        third_party_settings: {  }
+        type: string_textfield
+hidden: {  }

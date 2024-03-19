@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - spn
+name: 'Petition'
+type: petition
+description: 'Content type that can be used to create and manage petitions'
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: true

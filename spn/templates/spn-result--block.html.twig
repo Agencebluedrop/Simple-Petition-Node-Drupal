@@ -1,0 +1,59 @@
+{#
+/**
+ * @file
+ * Default block implementation to Petition Results Block.
+ *
+ * Available variables:
+ * - machine_name: machine name of the block
+ * - signatures: an array with all the signatures (name, lastname, comment)
+ * - signature_count: the total number of signatures
+ *
+ * @ingroup themeable
+ */
+#}
+{# Remove whitespace between tags for even spacing. #}
+{% apply spaceless %}
+
+  {% if signature_count %}
+  <div class="block-sep">
+
+    {# Print the signature count #}
+    <div class="block-title field-sep">
+      <h3>{{ signature_count ~ " " ~ "signatures"|t }}</h3>
+    </div>
+
+    {# Print all signatures #}
+    <div class="block-content field-sep">
+      <ul>
+        {% for key, signature in signatures %}
+        <li class="field-sep">
+          <div class="petition-block">
+            {% if signature.name or signature.lastname  %}
+                <div class="petition-block-name">
+                  <p>
+                  {{ signature.name }} {{ signature.lastname }}
+                  </p>
+                </div>
+                {% endif %}
+            {#
+            {% if signature.mail %}
+            <div class="petition-block-mail">
+              <p>{{ signature.mail }}</p>
+            </div>
+            {% endif %}
+            #}
+            {% if signature.comment %}
+            <div class="petition-block-comment date-style">
+              <p>{{ signature.comment }}</p>
+            </div>
+            {% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+  {% endif %}
+
+{% endapply %}
